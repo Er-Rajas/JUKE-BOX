@@ -1,5 +1,5 @@
 # JUKE-BOX
-This is a music bot made in discord.js
+This is a Discord music bot made in discord.js
 
 # USE 
 A simple to setup discord.js bot
