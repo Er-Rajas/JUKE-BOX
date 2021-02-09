@@ -26,7 +26,7 @@ for (const file of commandFiles) {
 //client ready
 client.on('ready', () => {
     console.log('We are online!');
-    client.user.setActivity('m!help');
+    client.user.setActivity('m!help');  //bot staus
 
 });
 //message guilds
