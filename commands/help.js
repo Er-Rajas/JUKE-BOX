@@ -1,29 +1,38 @@
 module.exports = {
     name: 'help',
-    aliases:[],    //aliases refer https://davidwalsh.name/destructuring-alias#:~:text=The%20syntax%20for%20specifying%20an,to%20keep%20in%20your%20locker!
+    aliases:[],
     discription: 'this is commands fo this bots',
     execute(message,args, cmd, client, Discord) {
 
-
+        // YOU CAN MAKE YOUR OWN EMBED, for more REFFER https://discordjs.guide/popular-topics/embeds.html
+        // If you don't need  all the elements showcased below. If you want a simpler embed, just leave some out. :)
         const Embed = new Discord.MessageEmbed()
-        //this is a embed, change the text if you want
-        .setTitle(' **COMMANDS**')
-        .setDescription('THIS ARE MY COMMANDS \n ----------')
-        .setColor('#FFFFFF')   //set your own colour in hex default is red
+        
+        .setTitle(' **JUKE-BOX**')
+        
+        .setDescription('JUKE BOX COMMAND \n ----------')
+        .setColor('#FFFFFF')  //set emmbed color in hex codes default black
         .addFields(
-            { name: '**PREFIX**', value: 'm!' },
-            { name: 'COMMAND 1', value: '**HELP**  \n //for list of commands\n `m!help`' },
-            { name: 'COMMAND 2', value: '**PLAY**  \n //plays the song or create a queue\n `m!play <song name>or<link>`' },
-            { name: 'COMMAND 3', value: '**SKIP**  \n //plays the next tsong in queue \n `m!skip`' },
-            { name: 'COMMAND 4', value: '**LEAVE** \n //leaves the voice channel \n `m!leave`' },
-            { name: '**NOTE**', value: '*DONT USE "<>" while writing comands*' },
+            // { name: '**PREFIX**', value: 'm!' },
+            { name: '**HELP**', value: '`m!help`', inline: true },
+            { name: '**PLAY**', value: '  \n  `m!play song`',inline: true },
+            // { name: '\u200B',value: '\u200B' }, //if you want to add blank space use this 
+            { name: '**SKIP**', value: '  \n  `m!skip`',inline: true },
+            { name: '**LEAVE**', value: ' \n  `m!leave`',inline: true },
+            { name: '\u200B',value: '\u200B',inline: true },
+            { name: '\u200B',value: '\u200B',inline:true },
+            { name: 'join my server', value: 'server address',inline: true },
+            { name: 'REPORT BUG HERE', value: 'gitt repo.',inline: true },
+            
+            
 
         )
-
+        .setURL('')//bot website if any
         .addField('`NOTE: bugs may aries`','----------')
-        .setImage('https://i.makeagif.com/media/8-14-2015/DsUXY8.gif')     //you can putt your own image link  here
-        .setFooter('Thank for adding me to the server')                    //set your own footer
+        .setImage('https://i.imgur.com/eCGr748.gif')
+        .setFooter('') 
         .setTimestamp()
+        // .setAuthor('', '', '')  
         message.channel.send(Embed)
 
     }

@@ -76,12 +76,13 @@ module.exports = {
                 }
             } else{
                 server_queue.songs.push(song);
-                return message.channel.send(`👍 **${song.title}** added to queue!`);
+                return message.channel.send(`👍 **${song.title}** added to queue!`); //ypu can add your custom message here
             }
         }
 
         else if(cmd === 'skip') skip_song(message, server_queue);
-        else if(cmd === 'stop') stop_song(message, server_queue);
+        else if(cmd === 'stop') stop_song(message, server_queue)
+        
     }
 
 }
@@ -114,6 +115,8 @@ const skip_song = (message, server_queue) => {
 
 const stop_song = (message, server_queue) => {
     if (!message.member.voice.channel) return message.channel.send('You need to be in a channel to execute this command!');
+    else if (message.channel.send(`😭 **I AM LEAVING NOW,BYE BYE! **`));  // you can add your own custom leaving message here
+    
     server_queue.songs = [];
     server_queue.connection.dispatcher.end();
 }
