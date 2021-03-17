@@ -1,4 +1,6 @@
- // https://www.npmjs.com/package/ytdl-core
+const Discord = require('discord.js')
+
+// https://www.npmjs.com/package/ytdl-core
 const ytdl = require('ytdl-core');
 // https://www.npmjs.com/package/yt-search
 const ytSearch = require('yt-search');
@@ -7,21 +9,22 @@ const ytSearch = require('yt-search');
 const queue = new Map();
 
 module.exports = {
-    name: 'play',
-    aliases: ['skip', 'stop'],
+    name: 'player',
+    aliases: ['play','skip', 'stop','pause','resume'],
     //We are using aliases to run the skip and stop command
     //follow this tutorial if lost to creating aliases: https://www.youtube.com/watch?v=QBUJ3cdofqc
 
     description: 'Advanced music bot',
-    async execute(message,args, cmd, client, Discord){
+    async execute(message,cmd,args,Discord){
 
-
+        let msglink = args.join('%20')
+        let msg = args.join(' ')
         //Checking for the voicechannel and permissions (you can add more permissions if you like).
         const voice_channel = message.member.voice.channel;
-        if (!voice_channel) return message.channel.send('You need to be in a channel to execute this command!');
+        if (!voice_channel) return message.channel.send('You need to be in a voice channel to execute this command!');
         const permissions = voice_channel.permissionsFor(message.client.user);
-        if (!permissions.has('CONNECT')) return message.channel.send('You dont have the correct permissins');
-        if (!permissions.has('SPEAK')) return message.channel.send('You dont have the correct permissins');
+        if (!permissions.has('CONNECT')) return message.channel.send("**OOF I DON'T HAVE PERMISSION `TO CONNECT` \nCONTACT ADMIN**");
+        if (!permissions.has('SPEAK')) return message.channel.send("**OOF I DON'T HAVE  PERMISSION `TO SPEAK` \nCONTTACT ADMIN**");
 
         //This is our server queue. We are getting this server queue from the global queue.
         const server_queue = queue.get(message.guild.id);
@@ -76,18 +79,32 @@ module.exports = {
                 }
             } else{
                 server_queue.songs.push(song);
-                return message.channel.send(`👍 **${song.title}** added to queue!`); //ypu can add your custom message here
+                // queue embed
+                let Embed = new Discord.MessageEmbed()
+                .setTitle('**JUKE BOX**')
+                .setColor('#FF7F50')
+                .setDescription('ADDING SONG')
+                .addField(`sucessfully **${song.title}** added to queue!` , `${song.url}`)
+                // .setFooter('Added by '  + message.author.tag,message.author.displayAvatarURL({ dynamic:true })+'\n')
+                .setTimestamp()
+                .setURL('https://jukebox-thediscordbot.godaddysites.com/')
+                
+                return message.channel.send(Embed).then((msg) =>{
+                    msg.react('👍')
+                })
+                
             }
         }
 
         else if(cmd === 'skip') skip_song(message, server_queue);
-        else if(cmd === 'stop') stop_song(message, server_queue)
-        
+        else if(cmd === 'stop') stop_song(message, server_queue);
+        else if(cmd === 'pause') pause_song(message, server_queue);
+        else if(cmd === 'resume') resume_song(message, server_queue) 
     }
 
 }
 
-const video_player = async (guild, song) => {
+const video_player = async (guild, song,message) => {
     const song_queue = queue.get(guild.id);
 
     //If no song is left in the server queue. Leave the voice channel and delete the key and value pair from the global queue.
@@ -97,16 +114,27 @@ const video_player = async (guild, song) => {
         return;
     }
     const stream = ytdl(song.url, { filter: 'audioonly' });
-    song_queue.connection.play(stream, { seek: 0, volume: 0.5 })
+    song_queue.connection.play(stream, { seek: 0, volume: 1.0 })
     .on('finish', () => {
         song_queue.songs.shift();
         video_player(guild, song_queue.songs[0]);
     });
-    await song_queue.text_channel.send(`🎶 Now playing **${song.title}**`)
+    // now playing embed
+    let newembed = new Discord.MessageEmbed()
+    .setTitle("**JUKE BOX**")
+    .setDescription('**NOW PLAYING**')
+    .setColor('#FF7F50')
+    .addField(`🎶**${song.title}** 🎶`, `${song.url}`)
+    .setTimestamp()
+    .setURL('https://jukebox-thediscordbot.godaddysites.com/')
+    // .addFooter('Added by ' + message.author.tag,message.author.displayAvatarURL({ dynamic:true }))
+    await song_queue.text_channel.send(newembed).then((msg)=>{
+        msg.react('👍')
+    })
 }
 
 const skip_song = (message, server_queue) => {
-    if (!message.member.voice.channel) return message.channel.send('You need to be in a channel to execute this command!');
+    if (!message.member.voice.channel) return message.channel.send('You need to be in a voice channel to execute this command!');
     if(!server_queue){
         return message.channel.send(`There are no songs in queue 😔`);
     }
@@ -114,9 +142,23 @@ const skip_song = (message, server_queue) => {
 }
 
 const stop_song = (message, server_queue) => {
-    if (!message.member.voice.channel) return message.channel.send('You need to be in a channel to execute this command!');
-    else if (message.channel.send(`😭 **I AM LEAVING NOW,BYE BYE! **`));  // you can add your own custom leaving message here
-    
+    if (!message.member.voice.channel) return message.channel.send('You need to be in a voice channel to execute this command!');
+    else if (message.channel.send(`😭 **I AM LEAVING NOW,BYE BYE! **`).then((msg)=>{       //leaving channel
+        msg.react('👍')
+        msg.react('😭')
+    }))
+
     server_queue.songs = [];
     server_queue.connection.dispatcher.end();
+}
+const pause_song = (message,server_queue) =>{
+    if(server_queue.connection.dispatcher.paused) return message.channel.send('`Song is already paused`')
+        server_queue.connection.dispatcher.pause();
+        message.channel.send('Player paused.')
+}
+const resume_song = (message,server_queue) =>{
+    if (!server_queue.connection.dispatcher.paused) return message.channel.send("song isn't paused")
+    server_queue.connection.dispatcher.resume();
+    message.channel.send('Resuming player')
+
 }
