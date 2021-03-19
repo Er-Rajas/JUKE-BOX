@@ -20,7 +20,9 @@ Remember this bot is under the CC0 lisense
 
 Made a cool edit? Make a pull request!
 
-Contact me on discord jobless.exe#8607
+Contact me on discord PI.exe#8607
+
+server: https://discord.gg/2y2Nw9feXA
 
 
 # ENJOY!
