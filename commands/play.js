@@ -1,4 +1,4 @@
-const Discord = require('discord.js')
+
 
 // https://www.npmjs.com/package/ytdl-core
 const ytdl = require('ytdl-core');
@@ -22,6 +22,7 @@ module.exports = {
         //Checking for the voicechannel and permissions (you can add more permissions if you like).
         const voice_channel = message.member.voice.channel;
         if (!voice_channel) return message.channel.send('You need to be in a voice channel to execute this command!');
+        //basic perm. required for bot
         const permissions = voice_channel.permissionsFor(message.client.user);
         if (!permissions.has('CONNECT')) return message.channel.send("**OOF I DON'T HAVE PERMISSION `TO CONNECT` \nCONTACT ADMIN**");
         if (!permissions.has('SPEAK')) return message.channel.send("**OOF I DON'T HAVE  PERMISSION `TO SPEAK` \nCONTTACT ADMIN**");
@@ -85,21 +86,21 @@ module.exports = {
                 .setColor('#FF7F50')
                 .setDescription('ADDING SONG')
                 .addField(`sucessfully **${song.title}** added to queue!` , `${song.url}`)
-                // .setFooter('Added by '  + message.author.tag,message.author.displayAvatarURL({ dynamic:true })+'\n')
+                // .setFooter('Added by '  + message.author.tag,message.author.displayAvatarURL({ dynamic:true })+'\n') //its not working
                 .setTimestamp()
                 .setURL('https://jukebox-thediscordbot.godaddysites.com/')
-                
+
                 return message.channel.send(Embed).then((msg) =>{
                     msg.react('👍')
                 })
-                
+
             }
         }
 
         else if(cmd === 'skip') skip_song(message, server_queue);
         else if(cmd === 'stop') stop_song(message, server_queue);
         else if(cmd === 'pause') pause_song(message, server_queue);
-        else if(cmd === 'resume') resume_song(message, server_queue) 
+        else if(cmd === 'resume') resume_song(message, server_queue)
     }
 
 }
@@ -127,7 +128,7 @@ const video_player = async (guild, song,message) => {
     .addField(`🎶**${song.title}** 🎶`, `${song.url}`)
     .setTimestamp()
     .setURL('https://jukebox-thediscordbot.godaddysites.com/')
-    // .addFooter('Added by ' + message.author.tag,message.author.displayAvatarURL({ dynamic:true }))
+    // .addFooter('Added by ' + message.author.tag,message.author.displayAvatarURL({ dynamic:true })) //this thing is actuall not working
     await song_queue.text_channel.send(newembed).then((msg)=>{
         msg.react('👍')
     })
