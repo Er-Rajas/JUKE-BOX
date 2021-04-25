@@ -1,6 +1,6 @@
 const Discord = require('discord.js'); //npm i discord.js
 const fs = require('fs'); //npm i fs
-require('dotenv').config(); //npm i dotenv
+
 const ytdl = require('ytdl-core'); //https://www.npmjs.com/package/ytdl-core
 const ytSearch = require('yt-search'); // https://www.npmjs.com/package/yt-search
 const { search } = require('ffmpeg-static'); //for ffmpeg watch this tutorial: https://www.youtube.com/watch?v=r1AtmY-RMyQ&t
